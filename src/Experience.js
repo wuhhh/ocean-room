@@ -20,7 +20,8 @@ function Lights() {
 			step: 0.05,
 		},
 		lightPosition: {
-			value: { x: 3.9, y: 1.8, z: -3 },
+			value: { x: 0, y: 1.8, z: -3 },
+			// value: { x: 3.9, y: 1.8, z: -3 },
 			step: 0.1,
 			min: -10,
 			max: 10,
@@ -32,7 +33,7 @@ function Lights() {
 		<>
 			<directionalLight
 				castShadow
-				shadow-camera-near={0.1}
+				shadow-camera-near={-1}
 				shadow-camera-far={20}
 				shadow-camera-left={-10}
 				shadow-camera-right={10}
@@ -40,7 +41,7 @@ function Lights() {
 				shadow-camera-bottom={-10}
 				shadow-mapSize-width={4096}
 				shadow-mapSize-height={4096}
-				shadow-normalBias={0.05}
+				shadow-normalBias={0.01}
 				color={lightColor}
 				position={[lightPosition.x, lightPosition.y, lightPosition.z]}
 				intensity={lightIntensity}
@@ -95,7 +96,7 @@ function Room() {
 			step: 0.01,
 		},
 		clearcoatRoughness: {
-			value: 0.18,
+			value: 0.66,
 			min: 0,
 			max: 1,
 			step: 0.01,
@@ -151,7 +152,7 @@ function Ocean() {
 		sunDirection: new THREE.Vector3(5, 12, -100),
 		sunColor: "#f8c08a",
 		waterColor: "#e0ffff",
-		distortionScale: 3.7,
+		distortionScale: 10,
 	}, { collapsed: true });
 
 	const config = useMemo(
@@ -195,7 +196,6 @@ function TheSky() {
 		sunPosition: [2, 1, 8],
 		inclination: 0,
 		azimuth: 0.25,
-		exposure: 0.5,
 		// mieCoefficient: 0.005,
 		// mieDirectionalG: 0.8,
 		rayleigh: 0.5,
