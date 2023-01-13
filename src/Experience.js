@@ -11,7 +11,7 @@ import { LayerMaterial, Noise } from 'lamina';
 extend({ Water });
 
 function Lights() {
-	const { lightPosition, lightColor, lightIntensity, ambient, normalBias } =
+	const { lightPosition, lightColor, lightIntensity, ambient } =
 		useControls({
 			lightColor: "#f8c08a",
 			lightIntensity: {
@@ -27,12 +27,6 @@ function Lights() {
 				max: 10,
 			},
 			ambient: 0.5,
-			normalBias: {
-				value: 0.05,
-				min: 0.0001,
-				max: 0.1,
-				step: 0.0001,
-			},
 		});
 
 	return (
