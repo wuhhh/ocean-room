@@ -9,3 +9,20 @@ body,
     height: 100%;
     background: #c0d0c7;
 }
+
+button {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	appearance: none;
+	font-family: sans-serif;
+	background: white;
+	border-radius: 3px;
+	padding:0.5rem 1rem;
+	border:0;
+	cursor: pointer;
+}
+
+button:hover {
+	background: lavender;
+}
