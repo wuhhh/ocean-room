@@ -20,8 +20,7 @@ function Lights() {
 			step: 0.05,
 		},
 		lightPosition: {
-			value: { x: 0, y: 1.8, z: -3 },
-			// value: { x: 3.9, y: 1.8, z: -3 },
+			value: { x: 3.9, y: 1.8, z: -3 },
 			step: 0.1,
 			min: -10,
 			max: 10,
@@ -146,8 +145,8 @@ function Ocean() {
 	const gl = useThree((state) => state.gl);
 	const waterNormals = useLoader(THREE.TextureLoader, "/waternormals1.jpeg");
 	waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+	
 	const geom = useMemo(() => new THREE.PlaneGeometry(300, 300), []);
-
 	const props = useControls('Ocean', {
 		sunDirection: new THREE.Vector3(5, 12, -100),
 		sunColor: "#f8c08a",
@@ -184,7 +183,7 @@ function Ocean() {
 function Sun() {
 	return (
 		<mesh position={[15, 8, -100]}>
-			<circleGeometry args={[1, 32]} />
+			<circleGeometry args={[0.75, 32]} />
 			<meshBasicMaterial color="#fdda68" />
 		</mesh>
 	);
