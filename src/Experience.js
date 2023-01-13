@@ -170,9 +170,9 @@ function Ocean() {
 	});
 	useFrame(
 		(state, delta) => {
-			if(lerpAmt < 1) { lerpAmt += delta * 0.1; }
+			// if(lerpAmt < 1) { lerpAmt += delta * 0.1; }
 			ref.current.material.uniforms.time.value += delta * 0.1;
-			ref.current.material.uniforms.waterColor.value = new THREE.Color(props.waterColor).lerp(new THREE.Color(0xff0000), lerpAmt);
+			// ref.current.material.uniforms.waterColor.value = new THREE.Color(props.waterColor).lerp(new THREE.Color(0xff0000), lerpAmt);
 		}
 	);
 
@@ -196,19 +196,25 @@ function Sun() {
 }
 
 function TheSky() {
+	const ref = useRef();
 	const props = useControls('Sky', {
 		distance: 1000,
-		sunPosition: [2, 1, 8],
-		inclination: 0,
-		azimuth: 0.25,
+		sunPosition: [2, 1, 8], // lerp to [2, -1, 8]
+		// inclination: 0,
+		// azimuth: 0,
 		// mieCoefficient: 0.005,
 		// mieDirectionalG: 0.8,
-		rayleigh: 0.5,
-		turbidity: 10,
+		rayleigh: 0.5, // lerp to 10
+		// turbidity: 10,
 	}, { collapsed: true });
 
+	useEffect(() => {
+		// TODO: Lerp ref.current.material.uniforms here :D
+		// console.log(ref.current);
+	})
+
 	return (
-		<Sky {...props} />
+		<Sky ref={ref} {...props} />
 	);
 }
 
