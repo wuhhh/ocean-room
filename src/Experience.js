@@ -189,7 +189,7 @@ function Ocean() {
 function Sun() {
 	return (
 		<mesh position={[15, 8, -100]}>
-			<circleGeometry args={[1, 16]} />
+			<circleGeometry args={[1, 32]} />
 			<meshBasicMaterial color="#fdda68" />
 		</mesh>
 	);
