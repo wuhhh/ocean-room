@@ -141,6 +141,7 @@ function Room() {
 }
 
 function Ocean() {
+	let lerpAmt = 0;
 	const ref = useRef();
 	const gl = useThree((state) => state.gl);
 	const waterNormals = useLoader(THREE.TextureLoader, "/waternormals1.jpeg");
@@ -168,8 +169,13 @@ function Ocean() {
 		ref.current.material.uniforms.size.value = 1.0;
 	});
 	useFrame(
-		(state, delta) => (ref.current.material.uniforms.time.value += delta * 0.1)
+		(state, delta) => {
+			if(lerpAmt < 1) { lerpAmt += delta * 0.1; }
+			ref.current.material.uniforms.time.value += delta * 0.1;
+			ref.current.material.uniforms.waterColor.value = new THREE.Color(props.waterColor).lerp(new THREE.Color(0xff0000), lerpAmt);
+		}
 	);
+
 	return (
 		<water
 			ref={ref}
