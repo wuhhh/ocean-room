@@ -23,7 +23,8 @@ root.render(
 			position: [0, 0, 9],
 		}}
 		gl={{
-			toneMappingExposure: 1,
+			toneMapping: THREE.ACESFilmicToneMapping,
+			toneMappingExposure: 0.8,
 			physicallyCorrectLights: false,
 		}}
 	>

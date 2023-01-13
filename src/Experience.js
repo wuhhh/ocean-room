@@ -6,28 +6,27 @@ import { useControls } from "leva";
 import { useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useEffect } from "react";
-import { LayerMaterial, Noise } from 'lamina';
+// import { LayerMaterial, Noise } from 'lamina';
 
 extend({ Water });
 
 function Lights() {
-	const { lightPosition, lightColor, lightIntensity, ambient } =
-		useControls({
-			lightColor: "#f8c08a",
-			lightIntensity: {
-				value: 2,
-				min: 0,
-				max: 3,
-				step: 0.05,
-			},
-			lightPosition: {
-				value: { x: 3.9, y: 1.8, z: -3 },
-				step: 0.1,
-				min: -10,
-				max: 10,
-			},
-			ambient: 0.5,
-		});
+	const { lightPosition, lightColor, lightIntensity, ambient } = useControls('Lights', {
+		lightColor: "#f8c08a",
+		lightIntensity: {
+			value: 2,
+			min: 0,
+			max: 3,
+			step: 0.05,
+		},
+		lightPosition: {
+			value: { x: 3.9, y: 1.8, z: -3 },
+			step: 0.1,
+			min: -10,
+			max: 10,
+		},
+		ambient: 0.5,
+	}, { collapsed: true });
 
 	return (
 		<>
@@ -54,7 +53,7 @@ function Lights() {
 function Room() {
 	const room = useRef();
 
-	const { roomSize, wallThickness, windowSize } = useControls({
+	const { roomSize, wallThickness, windowSize } = useControls('Room', {
 		roomSize: {
 			value: [4, 4, 7],
 			min: 1,
@@ -73,9 +72,9 @@ function Room() {
 			max: 5,
 			step: 0.1,
 		},
-	});
+	}, { collapsed: true });
 
-	const roomMaterialProps = useControls({
+	const roomMaterialProps = useControls('Room Material', {
 		color: "#ff8378",
 		metalness: {
 			value: 0.22,
@@ -107,7 +106,7 @@ function Room() {
 			max: 1,
 			step: 0.01,
 		},
-	});
+	}, { collapsed: true });
 
 	return (
 		<mesh
@@ -136,10 +135,7 @@ function Room() {
 					<boxGeometry args={[...windowSize]} />
 				</Brush>
 			</Subtraction>
-			<meshPhysicalMaterial
-				{...roomMaterialProps}
-				side={THREE.DoubleSide}
-			/>
+			<meshPhysicalMaterial {...roomMaterialProps} side={THREE.DoubleSide} />
 		</mesh>
 	);
 }
@@ -150,15 +146,19 @@ function Ocean() {
 	const waterNormals = useLoader(THREE.TextureLoader, "/waternormals1.jpeg");
 	waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 	const geom = useMemo(() => new THREE.PlaneGeometry(300, 300), []);
+
+	const props = useControls('Ocean', {
+		sunDirection: new THREE.Vector3(5, 12, -100),
+		sunColor: "#f8c08a",
+		waterColor: "#e0ffff",
+		distortionScale: 3.7,
+	}, { collapsed: true });
+
 	const config = useMemo(
 		() => ({
 			textureWidth: 512,
 			textureHeight: 512,
 			waterNormals,
-			sunDirection: new THREE.Vector3(5, 12, -100),
-			sunColor: 0xf8c08a,
-			waterColor: 0xe0ffff,
-			distortionScale: 3.7,
 			fog: false,
 			format: gl.encoding,
 		}),
@@ -173,7 +173,7 @@ function Ocean() {
 	return (
 		<water
 			ref={ref}
-			args={[geom, config]}
+			args={[geom, {...config, ...props}]}
 			position={[0, -4, -10]}
 			rotation-x={-Math.PI / 2}
 		/>
@@ -189,6 +189,24 @@ function Sun() {
 	);
 }
 
+function TheSky() {
+	const props = useControls('Sky', {
+		distance: 1000,
+		sunPosition: [2, 1, 8],
+		inclination: 0,
+		azimuth: 0.25,
+		exposure: 0.5,
+		// mieCoefficient: 0.005,
+		// mieDirectionalG: 0.8,
+		rayleigh: 0.5,
+		turbidity: 10,
+	}, { collapsed: true });
+
+	return (
+		<Sky {...props} />
+	);
+}
+
 export default function Experience() {
 	return (
 		<>
@@ -196,12 +214,7 @@ export default function Experience() {
 			<Lights />
 			<Room />
 			<Ocean />
-			<Sky
-				distance={450000}
-				sunPosition={[2, 1, 8]}
-				inclination={0}
-				azimuth={0.25}
-			/>
+			<TheSky />
 			<Sun />
 		</>
 	);
