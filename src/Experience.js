@@ -10,6 +10,10 @@ import { useEffect } from "react";
 
 extend({ Water });
 
+/**
+ * Lights
+ */
+
 function Lights() {
 	const { lightPosition, lightColor, lightIntensity, ambient } = useControls('Lights', {
 		lightColor: "#f8c08a",
@@ -49,6 +53,10 @@ function Lights() {
 		</>
 	);
 }
+
+/**
+ * Room
+ */
 
 function Room() {
 	const room = useRef();
@@ -140,6 +148,10 @@ function Room() {
 	);
 }
 
+/**
+ * Ocean
+ */
+
 function Ocean() {
 	let lerpAmt = 0;
 	const ref = useRef();
@@ -195,6 +207,10 @@ function Sun() {
 	);
 }
 
+/**
+ * Sky 
+ */
+
 function TheSky() {
 	const ref = useRef();
 	const props = useControls('Sky', {
@@ -217,6 +233,10 @@ function TheSky() {
 		<Sky ref={ref} {...props} />
 	);
 }
+
+/**
+ * Experience
+ */
 
 export default function Experience() {
 	return (
