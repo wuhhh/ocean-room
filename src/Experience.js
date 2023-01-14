@@ -159,26 +159,26 @@ function Ocean() {
 	const waterNormals = useLoader(THREE.TextureLoader, "/waternormals1.jpeg");
 	waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 	
-	const geom = useMemo(() => new THREE.PlaneGeometry(300, 300), []);
+	const geom = useMemo(() => new THREE.PlaneGeometry(50, 50), []);
 	const props = useControls('Ocean', {
 		sunDirection: new THREE.Vector3(5, 12, -100),
 		sunColor: "#f8c08a",
-		waterColor: "#e0ffff",
-		distortionScale: 10,
+		waterColor: "#93b8c7",
+		distortionScale: 4,
 	}, { collapsed: true });
 
 	const config = useMemo(
 		() => ({
 			textureWidth: 512,
 			textureHeight: 512,
-			waterNormals,
+			waterNormals: waterNormals,
 			fog: false,
 			format: gl.encoding,
 		}),
 		[waterNormals]
 	);
 	useEffect(() => {
-		ref.current.material.uniforms.size.value = 1.0;
+		ref.current.material.uniforms.size.value = 0.75;
 	});
 	useFrame(
 		(state, delta) => {
@@ -192,8 +192,8 @@ function Ocean() {
 		<water
 			ref={ref}
 			args={[geom, {...config, ...props}]}
-			position={[0, -4, -10]}
-			rotation-x={-Math.PI / 2}
+			position={[0, -4, -25]}
+			rotation-x={-Math.PI / 2.1}
 		/>
 	);
 }
