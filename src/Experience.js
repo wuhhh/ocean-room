@@ -6,14 +6,51 @@ import { useControls } from "leva";
 import { useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useEffect } from "react";
+import create from "zustand";
 
-extend({ Water });
+/**
+ * UI / Window / Global
+ */
+
+const useGlobalStore = create((set) => ({
+	mix: 0,
+	mixProxy: 0,
+	setMix: (mix) => set(() => ({ mix: mix })),
+	setMixProxy: (mix) => set(() => ({ mixProxy: mix })),
+}));
+
+function UI() {
+	const setMix = useGlobalStore((state) => state.setMix); // 0 to 1?
+	const setMixProxy = useGlobalStore((state) => state.setMixProxy); // -1 to 1
+	const mixControl = document.querySelector("#mix");
+
+	mixControl.addEventListener("input", (event) => {
+		setMixProxy(event.target.value);
+	});
+
+	const mix = useRef(useGlobalStore.getState().mix);
+	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
+	
+	useEffect(
+		() => {
+			useGlobalStore.subscribe((state) => (mix.current = state.mix));
+			useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
+		},
+		[]
+	);
+
+	useFrame(() => {
+		let diff = mixProxy.current - mix.current;
+		setMix(mix.current + (0.01 * diff));
+	});
+}
 
 /**
  * Lights
  */
 
 function Lights() {
+	const ref = useRef();
 	const { lightPosition, lightColor, lightIntensity, ambient } = useControls(
 		"Lights",
 		{
@@ -35,9 +72,21 @@ function Lights() {
 		{ collapsed: true }
 	);
 
+	const mix = useRef(useGlobalStore.getState().mix);
+	useEffect(
+		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
+		[]
+	);
+
+	useFrame(() => {
+		// THREE.MathUtils.mapLinear
+		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -5.2);
+	});
+
 	return (
 		<>
 			<directionalLight
+				ref={ref}
 				castShadow
 				shadow-camera-near={-1}
 				shadow-camera-far={20}
@@ -100,7 +149,7 @@ function Room() {
 				step: 0.01,
 			},
 			roughness: {
-				value: 0.6,
+				value: 1.0,
 				min: 0,
 				max: 1,
 				step: 0.01,
@@ -112,7 +161,7 @@ function Room() {
 				step: 0.01,
 			},
 			clearcoatRoughness: {
-				value: 0.66,
+				value: 1.0,
 				min: 0,
 				max: 1,
 				step: 0.01,
@@ -126,6 +175,21 @@ function Room() {
 		},
 		{ collapsed: true }
 	);
+
+	const targetRoomColor = "#506b89";
+	const mix = useRef(useGlobalStore.getState().mix);
+	useEffect(
+		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
+		[]
+	);
+
+	useFrame(() => {
+		let lerpedColor = new THREE.Color(roomMaterialProps.color).lerp(
+			new THREE.Color(targetRoomColor),
+			mix.current / 100
+		);
+		room.current.material.color = lerpedColor;
+	});
 
 	return (
 		<mesh
@@ -164,10 +228,12 @@ function Room() {
  */
 
 function Ocean() {
-	let lerpAmt = 0;
+	extend({ Water });
+
 	const ref = useRef();
 	const gl = useThree((state) => state.gl);
 	const waterNormals = useLoader(THREE.TextureLoader, "/waternormals.jpeg");
+
 	waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 
 	const geom = useMemo(() => new THREE.PlaneGeometry(50, 50), []);
@@ -193,13 +259,28 @@ function Ocean() {
 		}),
 		[waterNormals]
 	);
+
+	const targetWaterColor = "#00ff00";
+
+	// Fetch initial state
+	const mix = useRef(useGlobalStore.getState().mix);
+	// Connect to the store on mount, disconnect on unmount, catch state-changes in a reference
+	useEffect(
+		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
+		[]
+	);
+
 	useEffect(() => {
 		ref.current.material.uniforms.size.value = 0.75;
 	});
+
 	useFrame((state, delta) => {
-		// if(lerpAmt < 1) { lerpAmt += delta * 0.1; }
 		ref.current.material.uniforms.time.value += delta * 0.1;
-		// ref.current.material.uniforms.waterColor.value = new THREE.Color(props.waterColor).lerp(new THREE.Color(0xff0000), lerpAmt);
+		let lerpedColor = new THREE.Color(props.waterColor).lerp(
+			new THREE.Color(targetWaterColor),
+			mix.current / 100
+		);
+		ref.current.material.uniforms.waterColor.value = lerpedColor;
 	});
 
 	return (
@@ -217,10 +298,19 @@ function Ocean() {
  */
 
 function Sun() {
+	const props = useControls(
+		"Sun",
+		{
+			position: [15, 4, -100],
+			color: "#fdda68",
+		},
+		{ collapsed: true }
+	);
+
 	return (
-		<mesh position={[15, 4, -100]}>
+		<mesh position={props.position}>
 			<circleGeometry args={[0.75, 32]} />
-			<meshBasicMaterial color="#fdda68" />
+			<meshBasicMaterial color={props.color} />
 		</mesh>
 	);
 }
@@ -231,23 +321,27 @@ function Sun() {
 
 function Sky() {
 	const mesh = useRef();
-	const props = useControls('Sky', {
-		color1: '#e2dac3',
-		color2: '#6ed5e2',
-	}, { collapsed: true });
+	const props = useControls(
+		"Sky",
+		{
+			color1: "#e2dac3",
+			color2: "#6ed5e2",
+		},
+		{ collapsed: true }
+	);
 
 	useFrame(() => {
 		mesh.current.material.uniforms.color1.value = new THREE.Color(props.color1);
 		mesh.current.material.uniforms.color2.value = new THREE.Color(props.color2);
-	})
+	});
 
 	const GradientMaterial = shaderMaterial(
 		{
 			color1: new THREE.Color(props.color1),
-			color2: new THREE.Color(props.color2)
+			color2: new THREE.Color(props.color2),
 		},
 		// vertex shader
-		/*glsl*/`
+		/*glsl*/ `
 			uniform vec3 color1;
 			uniform vec3 color2;
 
@@ -263,7 +357,7 @@ function Sky() {
 			}
 		`,
 		// fragment shader
-		/*glsl*/`
+		/*glsl*/ `
 			varying vec2 vUv;
 			varying vec3 vColor1;
 			varying vec3 vColor2;
@@ -283,9 +377,9 @@ function Sky() {
 				gl_FragColor = vec4(gradient,1.0);
 			}
 		`
-	)
-	
-	extend({ GradientMaterial })
+	);
+
+	extend({ GradientMaterial });
 
 	return (
 		<mesh ref={mesh} position={[0, 16, -101]}>
@@ -302,6 +396,7 @@ function Sky() {
 export default function Experience() {
 	return (
 		<>
+			<UI />
 			<OrbitControls makeDefault />
 			<Lights />
 			<Room />
