@@ -1,6 +1,6 @@
 import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { shaderMaterial } from "@react-three/drei";
+import { OrbitControls, shaderMaterial } from "@react-three/drei";
 import { Brush, Subtraction } from "@react-three/csg";
 import { Leva, useControls } from "leva";
 import { useEffect, useMemo, useRef } from "react";
@@ -16,31 +16,40 @@ const useGlobalStore = create((set) => ({
 	mixProxy: 0,
 	setMix: (mix) => set(() => ({ mix: mix })),
 	setMixProxy: (mix) => set(() => ({ mixProxy: mix })),
+	mouse: [0, 0],
+	setMouse: (mouse) => set(() => ({ mouse: mouse })),
 }));
 
 function UI() {
-	const setMix = useGlobalStore((state) => state.setMix); // 0 to 1?
-	const setMixProxy = useGlobalStore((state) => state.setMixProxy); // -1 to 1
+	// Mix...
+	const setMix = useGlobalStore((state) => state.setMix);
+	const setMixProxy = useGlobalStore((state) => state.setMixProxy);
+	const setMouse = useGlobalStore((state) => state.setMouse);
 	const mixControl = document.querySelector("#mix");
-
-	mixControl.addEventListener("input", (event) => {
-		setMixProxy(event.target.value);
-	});
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
-	
-	useEffect(
-		() => {
-			useGlobalStore.subscribe((state) => (mix.current = state.mix));
-			useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
-		},
-		[]
-	);
+	const mouse = useRef(useGlobalStore.getState().mouse);
 
-	useFrame(() => {
+	useEffect(() => {
+		// Mouse...
+		window.addEventListener("mousemove", (event) => {
+			setMouse([event.pageX, event.pageY]);
+		});
+
+		mixControl.addEventListener("input", (event) => {
+			setMixProxy(event.target.value);
+		});
+
+		useGlobalStore.subscribe((state) => (mix.current = state.mix));
+		useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
+		useGlobalStore.subscribe((state) => (mouse.current = state.mouse));
+	}, []);
+
+	useFrame((state) => {
+		// Ease mix
 		let diff = mixProxy.current - mix.current;
-		setMix(mix.current + (0.01 * diff));
+		setMix(mix.current + 0.01 * diff);
 	});
 }
 
@@ -80,7 +89,13 @@ function Lights() {
 	);
 
 	useFrame(() => {
-		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -3.9);
+		ref.current.position.x = THREE.MathUtils.mapLinear(
+			mix.current,
+			0,
+			100,
+			3.9,
+			-3.9
+		);
 
 		let lerpedColor = new THREE.Color(props.lightColor).lerp(
 			new THREE.Color(targetLightColor),
@@ -105,7 +120,11 @@ function Lights() {
 				shadow-mapSize-height={4096}
 				shadow-normalBias={0.01}
 				color={props.lightColor}
-				position={[props.lightPosition.x, props.lightPosition.y, props.lightPosition.z]}
+				position={[
+					props.lightPosition.x,
+					props.lightPosition.y,
+					props.lightPosition.z,
+				]}
 				intensity={props.lightIntensity}
 			/>
 			<ambientLight intensity={props.ambient} />
@@ -271,14 +290,13 @@ function Ocean() {
 	const targetWaterColor = "#547583";
 
 	const mix = useRef(useGlobalStore.getState().mix);
-	
+
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
 		[]
 	);
 
 	useEffect(() => {
-		console.log(ref.current.material);
 		ref.current.material.uniforms.size.value = 0.75;
 	});
 
@@ -326,14 +344,20 @@ function Sun() {
 
 	const targetSunColor = "#fc9f68";
 	const mix = useRef(useGlobalStore.getState().mix);
-	
+
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
 		[]
 	);
 
 	useFrame(() => {
-		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 15, -15);
+		ref.current.position.x = THREE.MathUtils.mapLinear(
+			mix.current,
+			0,
+			100,
+			15,
+			-15
+		);
 
 		let lerpedSunColor = new THREE.Color(props.color).lerp(
 			new THREE.Color(targetSunColor),
@@ -369,7 +393,7 @@ function Sky() {
 	const targetColor2 = "#536989";
 
 	const mix = useRef(useGlobalStore.getState().mix);
-	
+
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
 		[]
@@ -453,6 +477,17 @@ export default function Experience() {
 		<>
 			<Leva hidden />
 			<UI />
+			<OrbitControls 
+				makeDefault
+				enableZoom="false" 
+				enablePan="false" 
+				minPolarAngle={Math.PI / 2.1} 
+				maxPolarAngle={Math.PI / 1.9} 
+				minAzimuthAngle={- Math.PI / 16}
+				maxAzimuthAngle={Math.PI / 16}
+				rotateSpeed="0.075"
+				dampingFactor="0.025"
+			/>
 			<Lights />
 			<Room />
 			<Ocean />
