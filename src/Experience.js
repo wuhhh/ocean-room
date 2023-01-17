@@ -261,6 +261,7 @@ function Ocean() {
 
 	const targetSunColor = "#94a9b5";
 	const targetWaterColor = "#152328";
+
 	const mix = useRef(useGlobalStore.getState().mix);
 	
 	useEffect(
@@ -303,6 +304,8 @@ function Ocean() {
  */
 
 function Sun() {
+	const ref = useRef();
+
 	const props = useControls(
 		"Sun",
 		{
@@ -312,8 +315,26 @@ function Sun() {
 		{ collapsed: true }
 	);
 
+	const targetSunColor = "#fc9f68";
+	const mix = useRef(useGlobalStore.getState().mix);
+	
+	useEffect(
+		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
+		[]
+	);
+
+	useFrame(() => {
+		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 15, -15);
+
+		let lerpedSunColor = new THREE.Color(props.color).lerp(
+			new THREE.Color(targetSunColor),
+			mix.current / 100
+		);
+		ref.current.material.color = lerpedSunColor;
+	});
+
 	return (
-		<mesh position={props.position}>
+		<mesh ref={ref} position={props.position}>
 			<circleGeometry args={[0.75, 32]} />
 			<meshBasicMaterial color={props.color} />
 		</mesh>
