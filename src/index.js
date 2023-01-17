@@ -3,7 +3,7 @@ import * as THREE from "three";
 import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 import Experience from "./Experience.js";
-import { Perf } from "r3f-perf";
+// import { Perf } from "r3f-perf";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
@@ -28,7 +28,7 @@ root.render(
 			physicallyCorrectLights: false,
 		}}
 	>
-		<Perf position="top-left" minimal />
+		{/* <Perf position="top-left" minimal /> */}
 		<Experience />
 	</Canvas>
 );
