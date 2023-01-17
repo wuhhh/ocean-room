@@ -16,8 +16,6 @@ const useGlobalStore = create((set) => ({
 	mixProxy: 0,
 	setMix: (mix) => set(() => ({ mix: mix })),
 	setMixProxy: (mix) => set(() => ({ mixProxy: mix })),
-	mouse: [0, 0],
-	setMouse: (mouse) => set(() => ({ mouse: mouse })),
 }));
 
 function UI() {
@@ -29,21 +27,14 @@ function UI() {
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
-	const mouse = useRef(useGlobalStore.getState().mouse);
 
 	useEffect(() => {
-		// Mouse...
-		window.addEventListener("mousemove", (event) => {
-			setMouse([event.pageX, event.pageY]);
-		});
-
 		mixControl.addEventListener("input", (event) => {
 			setMixProxy(event.target.value);
 		});
 
 		useGlobalStore.subscribe((state) => (mix.current = state.mix));
 		useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
-		useGlobalStore.subscribe((state) => (mouse.current = state.mouse));
 	}, []);
 
 	useFrame((state) => {
