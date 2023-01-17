@@ -359,7 +359,7 @@ function Sun() {
 
 	return (
 		<mesh ref={ref} position={props.position}>
-			<circleGeometry args={[0.75, 32]} />
+			<sphereGeometry args={[0.75, 32, 32]} />
 			<meshBasicMaterial color={props.color} />
 		</mesh>
 	);
