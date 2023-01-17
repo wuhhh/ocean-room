@@ -51,7 +51,7 @@ function UI() {
 
 function Lights() {
 	const ref = useRef();
-	const { lightPosition, lightColor, lightIntensity, ambient } = useControls(
+	const props = useControls(
 		"Lights",
 		{
 			lightColor: "#f8c08a",
@@ -72,7 +72,9 @@ function Lights() {
 		{ collapsed: true }
 	);
 
+	const targetLightColor = "#8bcff7";
 	const mix = useRef(useGlobalStore.getState().mix);
+
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
 		[]
@@ -80,6 +82,13 @@ function Lights() {
 
 	useFrame(() => {
 		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -5.2);
+
+		let lerpedColor = new THREE.Color(props.lightColor).lerp(
+			new THREE.Color(targetLightColor),
+			mix.current / 100
+		);
+
+		ref.current.color = lerpedColor;
 	});
 
 	return (
@@ -96,11 +105,11 @@ function Lights() {
 				shadow-mapSize-width={4096}
 				shadow-mapSize-height={4096}
 				shadow-normalBias={0.01}
-				color={lightColor}
-				position={[lightPosition.x, lightPosition.y, lightPosition.z]}
-				intensity={lightIntensity}
+				color={props.lightColor}
+				position={[props.lightPosition.x, props.lightPosition.y, props.lightPosition.z]}
+				intensity={props.lightIntensity}
 			/>
-			<ambientLight intensity={ambient} />
+			<ambientLight intensity={props.ambient} />
 		</>
 	);
 }
@@ -175,7 +184,7 @@ function Room() {
 		{ collapsed: true }
 	);
 
-	const targetRoomColor = "#506b89";
+	const targetRoomColor = "#616d83";
 	const mix = useRef(useGlobalStore.getState().mix);
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
@@ -259,8 +268,8 @@ function Ocean() {
 		[waterNormals]
 	);
 
-	const targetSunColor = "#94a9b5";
-	const targetWaterColor = "#152328";
+	const targetSunColor = "#8ea6ad";
+	const targetWaterColor = "#547583";
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	
@@ -356,8 +365,8 @@ function Sky() {
 		{ collapsed: true }
 	);
 
-	const targetColor1 = "#395369";
-	const targetColor2 = "#1c5e76";
+	const targetColor1 = "#4f7fbe";
+	const targetColor2 = "#536989";
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	
