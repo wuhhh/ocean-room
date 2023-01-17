@@ -79,7 +79,6 @@ function Lights() {
 	);
 
 	useFrame(() => {
-		// THREE.MathUtils.mapLinear
 		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -5.2);
 	});
 
@@ -260,11 +259,10 @@ function Ocean() {
 		[waterNormals]
 	);
 
-	const targetWaterColor = "#00ff00";
-
-	// Fetch initial state
+	const targetSunColor = "#94a9b5";
+	const targetWaterColor = "#152328";
 	const mix = useRef(useGlobalStore.getState().mix);
-	// Connect to the store on mount, disconnect on unmount, catch state-changes in a reference
+	
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
 		[]
@@ -276,11 +274,18 @@ function Ocean() {
 
 	useFrame((state, delta) => {
 		ref.current.material.uniforms.time.value += delta * 0.1;
-		let lerpedColor = new THREE.Color(props.waterColor).lerp(
+
+		let lerpedWaterColor = new THREE.Color(props.waterColor).lerp(
 			new THREE.Color(targetWaterColor),
 			mix.current / 100
 		);
-		ref.current.material.uniforms.waterColor.value = lerpedColor;
+		ref.current.material.uniforms.waterColor.value = lerpedWaterColor;
+
+		let lerpedSunColor = new THREE.Color(props.sunColor).lerp(
+			new THREE.Color(targetSunColor),
+			mix.current / 100
+		);
+		ref.current.material.uniforms.sunColor.value = lerpedSunColor;
 	});
 
 	return (
@@ -330,9 +335,29 @@ function Sky() {
 		{ collapsed: true }
 	);
 
-	useFrame(() => {
-		mesh.current.material.uniforms.color1.value = new THREE.Color(props.color1);
-		mesh.current.material.uniforms.color2.value = new THREE.Color(props.color2);
+	const targetColor1 = "#395369";
+	const targetColor2 = "#1c5e76";
+
+	const mix = useRef(useGlobalStore.getState().mix);
+	
+	useEffect(
+		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
+		[]
+	);
+
+	useFrame((state, delta) => {
+		let lerpedColor1 = new THREE.Color(props.color1).lerp(
+			new THREE.Color(targetColor1),
+			mix.current / 100
+		);
+
+		let lerpedColor2 = new THREE.Color(props.color2).lerp(
+			new THREE.Color(targetColor2),
+			mix.current / 100
+		);
+
+		mesh.current.material.uniforms.color1.value = lerpedColor1;
+		mesh.current.material.uniforms.color2.value = lerpedColor2;
 	});
 
 	const GradientMaterial = shaderMaterial(
