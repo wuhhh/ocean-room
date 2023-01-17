@@ -1,11 +1,10 @@
 import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { shaderMaterial, OrbitControls } from "@react-three/drei";
+import { shaderMaterial } from "@react-three/drei";
 import { Brush, Subtraction } from "@react-three/csg";
-import { useControls } from "leva";
-import { useMemo, useRef } from "react";
+import { Leva, useControls } from "leva";
+import { useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
-import { useEffect } from "react";
 import create from "zustand";
 
 /**
@@ -81,7 +80,7 @@ function Lights() {
 	);
 
 	useFrame(() => {
-		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -5.2);
+		ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -3.9);
 
 		let lerpedColor = new THREE.Color(props.lightColor).lerp(
 			new THREE.Color(targetLightColor),
@@ -279,6 +278,7 @@ function Ocean() {
 	);
 
 	useEffect(() => {
+		console.log(ref.current.material);
 		ref.current.material.uniforms.size.value = 0.75;
 	});
 
@@ -451,8 +451,8 @@ function Sky() {
 export default function Experience() {
 	return (
 		<>
+			<Leva hidden />
 			<UI />
-			<OrbitControls makeDefault />
 			<Lights />
 			<Room />
 			<Ocean />
