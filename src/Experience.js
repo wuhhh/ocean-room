@@ -322,18 +322,38 @@ function Ocean() {
 
 function Sun() {
 	const ref = useRef();
-
-	const props = useControls(
-		"Sun",
-		{
-			position: [15, 4, -100],
-			color: "#fdda68",
-		},
-		{ collapsed: true }
-	);
-
-	const targetSunColor = "#fc9f68";
+	const sunColor = '#fdda68';
 	const mix = useRef(useGlobalStore.getState().mix);
+
+	const HalfLightMaterial = shaderMaterial(
+    {
+			color: new THREE.Color(sunColor),
+		},
+    // vertex shader
+		/*glsl*/ `
+		uniform vec3 color;
+		varying vec2 vUv;
+		varying vec3 vColor;
+
+		void main() {
+			vUv = uv;
+			vColor = color;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+	`,
+		// fragment shader
+		/*glsl*/ `
+		varying vec2 vUv;
+		varying vec3 vColor;
+
+		void main() {
+			float cHalf = step(vUv.x, 0.5);
+			gl_FragColor.rgba = vec4(vColor, cHalf);
+		}
+	`
+  );
+
+  extend({ HalfLightMaterial });
 
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
@@ -349,17 +369,19 @@ function Sun() {
 			-15
 		);
 
-		let lerpedSunColor = new THREE.Color(props.color).lerp(
-			new THREE.Color(targetSunColor),
-			mix.current / 100
+		ref.current.rotation.y = THREE.MathUtils.mapLinear(
+			mix.current,
+			0,
+			100,
+			0,
+			-Math.PI * 0.55,
 		);
-		ref.current.material.color = lerpedSunColor;
 	});
 
 	return (
-		<mesh ref={ref} position={props.position}>
+		<mesh ref={ref} position={[15, 4, -100]}>
 			<sphereGeometry args={[0.75, 32, 32]} />
-			<meshBasicMaterial color={props.color} />
+			<halfLightMaterial transparent={true	} />
 		</mesh>
 	);
 }
