@@ -467,13 +467,13 @@ export default function Experience() {
 		<>
 			<Leva hidden />
 			<UI />
-			<OrbitControls 
+			<OrbitControls
 				makeDefault
 				enableZoom={false}
 				enablePan={false}
-				minPolarAngle={Math.PI / 2.1} 
-				maxPolarAngle={Math.PI / 1.9} 
-				minAzimuthAngle={- Math.PI / 16}
+				minPolarAngle={Math.PI / 2.1}
+				maxPolarAngle={Math.PI / 1.9}
+				minAzimuthAngle={-Math.PI / 16}
 				maxAzimuthAngle={Math.PI / 16}
 				rotateSpeed="0.075"
 				dampingFactor="0.025"
