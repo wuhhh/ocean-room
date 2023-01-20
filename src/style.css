@@ -10,15 +10,16 @@ body,
     background: #c0d0c7;
 }
 
-input {
+.mix {
 	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	/* appearance: none; */
-	font-family: sans-serif;
-	background: white;
-	border-radius: 3px;
-	padding:0.5rem 1rem;
-	border:0;
-	cursor: pointer;
+	left: 50%;
+	bottom: 32px;
+	height:44px;
+	width: 420px;
+	transform: translateX(-50%);
+}
+
+.mix .mix--range {
+	position: absolute;
+	top:0; right:0; bottom:0; left:0;
 }

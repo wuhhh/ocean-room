@@ -22,8 +22,7 @@ function UI() {
 	// Mix...
 	const setMix = useGlobalStore((state) => state.setMix);
 	const setMixProxy = useGlobalStore((state) => state.setMixProxy);
-	const setMouse = useGlobalStore((state) => state.setMouse);
-	const mixControl = document.querySelector("#mix");
+	const mixControl = document.querySelector(".mix--range");
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
