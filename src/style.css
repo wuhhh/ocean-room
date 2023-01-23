@@ -14,12 +14,62 @@ body,
 	position: absolute;
 	left: 50%;
 	bottom: 32px;
-	height:44px;
-	width: 420px;
+	height:34px;
+	width: 360px;
+	opacity:0.5;
+	transition: opacity 500ms ease;
 	transform: translateX(-50%);
+}
+
+.mix:hover {
+	opacity: 1;
+}
+
+.mix .mix--track {
+	position: absolute;
+	top: 50%; left: 2px; right: 2px;
+	height: 4px;
+	transform: translateY(-50%);
+	background: #462724;
+	border-radius: 1px;
 }
 
 .mix .mix--range {
 	position: absolute;
 	top:0; right:0; bottom:0; left:0;
+
+	-webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mix--range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 12px;
+	height: 12px;
+	background-color: #efefef;
+	border-radius: 2px;
+	transition: box-shadow 500ms ease;
+}
+
+.mix--range::-moz-range-thumb {
+	border: none;
+	width: 12px;
+	height: 12px;
+	background-color: #efefef;
+	border-radius: 2px;
+	transition: box-shadow 500ms ease;
+}
+
+.mix--range:focus {
+  outline: none;
+}
+
+.mix--range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
+}
+
+.mix--range:focus::-moz-range-thumb {
+  box-shadow: 0 0 16px 3px rgba(255,255,255, 0.2);   
 }

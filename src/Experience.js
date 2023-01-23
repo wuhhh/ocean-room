@@ -23,24 +23,36 @@ function UI() {
 	const setMix = useGlobalStore((state) => state.setMix);
 	const setMixProxy = useGlobalStore((state) => state.setMixProxy);
 	const mixControl = document.querySelector(".mix--range");
+	const mixTrack = document.querySelector(".mix--track");
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
 
-	useEffect(() => {
-		mixControl.addEventListener("input", (event) => {
-			setMixProxy(event.target.value);
-		});
+	const trackInitialColor = '#462724';
+	const trackTargetColor = new THREE.Color("#050606");
 
+	useEffect(() => {
 		useGlobalStore.subscribe((state) => (mix.current = state.mix));
 		useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
+		mixTrack.style.backgroundColor = trackInitialColor;
 	}, []);
 
 	useFrame((state) => {
 		// Ease mix
 		let diff = mixProxy.current - mix.current;
 		setMix(mix.current + 0.01 * diff);
+
+		mixControl.addEventListener("input", (event) => {
+			setMixProxy(event.target.value);
+			mixTrack.style.backgroundColor = `#${new THREE.Color(trackInitialColor)
+				.lerp(trackTargetColor, easeInCubic(mixProxy.current / 100))
+				.getHexString()}`;
+		});
 	});
+}
+
+function easeInCubic(x) {
+	return x * x * x;
 }
 
 /**
@@ -322,14 +334,14 @@ function Ocean() {
 
 function Sun() {
 	const ref = useRef();
-	const sunColor = '#fdda68';
+	const sunColor = "#fdda68";
 	const mix = useRef(useGlobalStore.getState().mix);
 
 	const HalfLightMaterial = shaderMaterial(
-    {
+		{
 			color: new THREE.Color(sunColor),
 		},
-    // vertex shader
+		// vertex shader
 		/*glsl*/ `
 		uniform vec3 color;
 		varying vec2 vUv;
@@ -351,9 +363,9 @@ function Sun() {
 			gl_FragColor.rgba = vec4(vColor, cHalf);
 		}
 	`
-  );
+	);
 
-  extend({ HalfLightMaterial });
+	extend({ HalfLightMaterial });
 
 	useEffect(
 		() => useGlobalStore.subscribe((state) => (mix.current = state.mix)),
@@ -374,14 +386,14 @@ function Sun() {
 			0,
 			100,
 			0,
-			-Math.PI * 0.55,
+			-Math.PI * 0.55
 		);
 	});
 
 	return (
 		<mesh ref={ref} position={[15, 4, -100]}>
 			<sphereGeometry args={[0.75, 32, 32]} />
-			<halfLightMaterial transparent={true	} />
+			<halfLightMaterial transparent={true} />
 		</mesh>
 	);
 }
