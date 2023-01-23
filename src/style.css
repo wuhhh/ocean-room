@@ -13,10 +13,10 @@ body,
 .mix {
 	position: absolute;
 	left: 50%;
-	bottom: 32px;
+	bottom: 24px;
 	height:34px;
 	width: 360px;
-	opacity:0.5;
+	/* opacity:0.5; */
 	transition: opacity 500ms ease;
 	transform: translateX(-50%);
 }
