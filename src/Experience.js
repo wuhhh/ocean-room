@@ -12,8 +12,8 @@ import create from "zustand";
  */
 
 const useGlobalStore = create((set) => ({
-	mix: 0,
-	mixProxy: 0,
+	mix: 10,
+	mixProxy: 10,
 	setMix: (mix) => set(() => ({ mix: mix })),
 	setMixProxy: (mix) => set(() => ({ mixProxy: mix })),
 }));
@@ -23,18 +23,13 @@ function UI() {
 	const setMix = useGlobalStore((state) => state.setMix);
 	const setMixProxy = useGlobalStore((state) => state.setMixProxy);
 	const mixControl = document.querySelector(".mix--range");
-	const mixTrack = document.querySelector(".mix--track");
 
 	const mix = useRef(useGlobalStore.getState().mix);
 	const mixProxy = useRef(useGlobalStore.getState().mixProxy);
 
-	const trackInitialColor = '#462724';
-	const trackTargetColor = new THREE.Color("#050606");
-
 	useEffect(() => {
 		useGlobalStore.subscribe((state) => (mix.current = state.mix));
 		useGlobalStore.subscribe((state) => (mixProxy.current = state.mixProxy));
-		mixTrack.style.backgroundColor = trackInitialColor;
 	}, []);
 
 	useFrame((state) => {
@@ -44,9 +39,6 @@ function UI() {
 
 		mixControl.addEventListener("input", (event) => {
 			setMixProxy(event.target.value);
-			mixTrack.style.backgroundColor = `#${new THREE.Color(trackInitialColor)
-				.lerp(trackTargetColor, easeInCubic(mixProxy.current / 100))
-				.getHexString()}`;
 		});
 	});
 }

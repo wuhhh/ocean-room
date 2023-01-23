@@ -10,66 +10,93 @@ body,
     background: #c0d0c7;
 }
 
+svg {
+	display: block;
+}
+
 .mix {
 	position: absolute;
 	left: 50%;
-	bottom: 24px;
-	height:34px;
-	width: 360px;
-	/* opacity:0.5; */
-	transition: opacity 500ms ease;
+	bottom: 0;
+	height: 48px;
+	width: 398px;
+	background-color: #1c1c1c;
+	border-radius: 20px 20px 0 0;
 	transform: translateX(-50%);
+
+	display: flex;
+	align-items:center;
+	justify-content:space-between;
+	padding:0 21px 6px 16px;
+}
+
+.mix--icon-sun,
+.mix--icon-moon {
+	flex-shrink: 0;
+}
+
+.mix--icon-sun {
+	width: 13px;
+	height: 13px;
+	border-radius: 9999px;
+	background-color: rgb(255, 206, 113);
+	box-shadow: 0 0 5px 2px rgb(255, 206, 113, 0.5);
+}
+
+.mix--icon-moon {
+	color: rgb(242, 236, 236);
+	filter: drop-shadow(0 0 5px rgba(242, 236, 236, 1.0));
 }
 
 .mix:hover {
 	opacity: 1;
 }
 
-.mix .mix--track {
-	position: absolute;
-	top: 50%; left: 2px; right: 2px;
-	height: 4px;
-	transform: translateY(-50%);
-	background: #462724;
-	border-radius: 1px;
-}
-
-.mix .mix--range {
-	position: absolute;
-	top:0; right:0; bottom:0; left:0;
-
+.mix--range {
+	width: 100%;
+	height: 13px;
+	margin: 0 16px;
 	-webkit-appearance: none;
   appearance: none;
   background: transparent;
   cursor: pointer;
 }
 
+.mix--range::-webkit-slider-runnable-track {
+  background: #434343;
+  height: 2px;
+}
+
+.mix--range::-moz-range-track {
+  background: #434343;
+  height: 2px;
+}
+
 .mix--range::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	width: 12px;
-	height: 12px;
-	background-color: #efefef;
-	border-radius: 2px;
-	transition: box-shadow 500ms ease;
+	width: 10px;
+	height: 10px;
+	background-color: #fff;
+	border-radius: 1px;
+	box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
+	margin-top: -4px;
+	transform: rotate(45deg);
 }
 
 .mix--range::-moz-range-thumb {
 	border: none;
-	width: 12px;
-	height: 12px;
-	background-color: #efefef;
-	border-radius: 2px;
-	transition: box-shadow 500ms ease;
+	width: 10px;
+	height: 10px;
+	background-color: #fff;
+	border-radius: 1px;
+	box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
+	transform: rotate(45deg);
 }
 
 .mix--range:focus {
   outline: none;
 }
 
-.mix--range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
-}
+.mix--range:focus::-webkit-slider-thumb {}
 
-.mix--range:focus::-moz-range-thumb {
-  box-shadow: 0 0 16px 3px rgba(255,255,255, 0.2);   
-}
+.mix--range:focus::-moz-range-thumb {}
