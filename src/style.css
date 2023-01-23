@@ -40,12 +40,12 @@ svg {
 	height: 13px;
 	border-radius: 9999px;
 	background-color: rgb(255, 206, 113);
-	box-shadow: 0 0 5px 2px rgb(255, 206, 113, 0.5);
+	/* box-shadow: 0 0 5px 2px rgb(255, 206, 113, 0.5); */
 }
 
 .mix--icon-moon {
-	color: rgb(242, 236, 236);
-	filter: drop-shadow(0 0 5px rgba(242, 236, 236, 1.0));
+	color: white;
+	/* filter: drop-shadow(0 0 5px rgba(255,255,255, 1.0)); */
 }
 
 .mix:hover {
@@ -76,9 +76,9 @@ svg {
 	-webkit-appearance: none;
 	width: 10px;
 	height: 10px;
-	background-color: #fff;
+	background-color: #D4D4D4;
 	border-radius: 1px;
-	box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
+	/*  w: 0 0 16px 3px rgba(255, 255, 255, 0.2); */
 	margin-top: -4px;
 	transform: rotate(45deg);
 }
@@ -87,9 +87,9 @@ svg {
 	border: none;
 	width: 10px;
 	height: 10px;
-	background-color: #fff;
+	background-color: #D4D4D4;
 	border-radius: 1px;
-	box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2);
+	/* box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2); */
 	transform: rotate(45deg);
 }
 
