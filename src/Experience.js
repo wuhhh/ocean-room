@@ -19,6 +19,8 @@ const useGlobalStore = create((set) => ({
 }));
 
 function UI() {
+	// console.log('Render UI');
+
 	// Mix...
 	const setMix = useGlobalStore((state) => state.setMix);
 	const setMixProxy = useGlobalStore((state) => state.setMixProxy);
@@ -43,15 +45,13 @@ function UI() {
 	});
 }
 
-function easeInCubic(x) {
-	return x * x * x;
-}
-
 /**
  * Lights
  */
 
 function Lights() {
+	// console.log('Render Lights');
+	
 	const ref = useRef();
 	const props = useControls(
 		"Lights",
@@ -131,6 +131,8 @@ function Lights() {
  */
 
 function Room() {
+	// console.log('Render Room');
+
 	const room = useRef();
 
 	const { roomSize, wallThickness, windowSize } = useControls(
@@ -248,6 +250,8 @@ function Room() {
  */
 
 function Ocean() {
+	// console.log('Render Ocean');
+
 	extend({ Water });
 
 	const ref = useRef();
@@ -325,8 +329,11 @@ function Ocean() {
  */
 
 function Sun() {
+	// console.log('Render Sun');
+
 	const ref = useRef();
 	const sunColor = "#fdda68";
+	const targetSunColor = "#f3fffd";
 	const mix = useRef(useGlobalStore.getState().mix);
 
 	const HalfLightMaterial = shaderMaterial(
@@ -380,6 +387,12 @@ function Sun() {
 			0,
 			-Math.PI * 0.55
 		);
+
+		let lerpedSunColor = new THREE.Color(sunColor).lerp(
+			new THREE.Color(targetSunColor),
+			mix.current / 100
+		);
+		ref.current.material.uniforms.color.value = lerpedSunColor;
 	});
 
 	return (
@@ -395,6 +408,8 @@ function Sun() {
  */
 
 function Sky() {
+	// console.log('Render Sky');
+
 	const mesh = useRef();
 	const props = useControls(
 		"Sky",
@@ -489,6 +504,8 @@ function Sky() {
  */
 
 export default function Experience() {
+	// console.log('Render Experience');
+
 	return (
 		<>
 			<Leva hidden />
