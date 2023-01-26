@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
-import Experience from "./Experience.js";
+import Experience from "./Experience.jsx";
 // import { Perf } from "r3f-perf";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
