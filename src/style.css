@@ -96,7 +96,3 @@ svg {
 .mix--range:focus {
   outline: none;
 }
-
-.mix--range:focus::-webkit-slider-thumb {}
-
-.mix--range:focus::-moz-range-thumb {}
