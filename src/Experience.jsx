@@ -121,7 +121,8 @@ function Room() {
 
   const { width, height } = useThree(state => state.viewport);
   const roomSize = [1, 1, 0.57];
-  const scale = Math.max(width, height);
+  const scaleMax = Math.max(width, height);
+  const scaleMin = Math.min(width, height);
   const thickness = 0.15;
   const room = useRef();
 
@@ -174,15 +175,15 @@ function Room() {
 
   return (
     /* <>
-      <mesh scale={[scale, scale, scale]}>
+      <mesh scale={[scaleMax, scaleMax, scaleMax]}>
         <boxGeometry args={[...roomSize]} />
         <meshPhysicalMaterial wireframe={true} {...roomMaterialProps} side={THREE.DoubleSide} />
       </mesh>
-      <mesh scale={[scale, scale, scale]} position={[0, 0, thickness * 0.5 * scale]}>
+      <mesh scale={[scaleMax, scaleMax, scaleMax]} position={[0, 0, thickness * 0.5 * scaleMax]}>
         <boxGeometry args={[roomSize[0] - thickness, roomSize[1] - thickness, roomSize[2]]} />
         <meshPhysicalMaterial wireframe={true} />
       </mesh>
-      <mesh scale={[scale, scale, scale]} position={[0, 0, -(roomSize[2] * scale * 0.5)]}>
+      <mesh scale={[scaleMax, scaleMax, scaleMax]} position={[0, 0, -(roomSize[2] * scaleMax * 0.5)]}>
         <boxGeometry args={[0.4, 0.4, thickness]} />
         <meshPhysicalMaterial wireframe={true} />
       </mesh>
@@ -190,15 +191,15 @@ function Room() {
     <mesh ref={room} position={[0, 0, -0.5]} castShadow receiveShadow>
       <Subtraction>
         <Subtraction a>
-          <Brush a scale={[width, height, scale]}>
+          <Brush a scale={[width, height, scaleMax]}>
             <boxGeometry args={[...roomSize]} />
           </Brush>
-          <Brush b scale={[width, height, scale]} position={[0, 0, thickness * 0.5 * scale]}>
+          <Brush b scale={[width, height, scaleMax]} position={[0, 0, thickness * 0.5 * scaleMax]}>
             <boxGeometry args={[roomSize[0] - thickness, roomSize[1] - thickness * 0.5, roomSize[2]]} />
           </Brush>
         </Subtraction>
-        <Brush b scale={[scale, scale, scale]} position={[0, 0, -(roomSize[2] * scale * 0.5)]}>
-          <boxGeometry args={[0.44, 0.44, thickness * 2]} />
+        <Brush b scale={[scaleMin, scaleMin, scaleMin]} position={[0, 0, -(roomSize[2] * scaleMax * 0.5)]}>
+          <boxGeometry args={[0.8, 0.8, thickness * 4]} />
         </Brush>
       </Subtraction>
       <meshPhysicalMaterial {...roomMaterialProps} side={THREE.DoubleSide} />
