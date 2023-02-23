@@ -83,9 +83,7 @@ function Lights() {
 
   useFrame(() => {
     ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 3.9, -3.9);
-
     let lerpedColor = new THREE.Color(props.lightColor).lerp(new THREE.Color(targetLightColor), mix.current / 100);
-
     ref.current.color = lerpedColor;
   });
 
@@ -119,11 +117,13 @@ function Lights() {
 function Room() {
   // console.log('Render Room');
 
-  const { width, height } = useThree(state => state.viewport);
+  let { width, height } = useThree(state => state.viewport);
+  width = width < 5 ? 5 : width;
   const roomSize = [1, 1, 0.57];
   const scaleMax = Math.max(width, height);
   const scaleMin = Math.min(width, height);
   const thickness = 0.15;
+  const windowSize = width < 7.5 ? 0.6 : 0.8;
   const room = useRef();
 
   const roomMaterialProps = useControls(
@@ -174,20 +174,6 @@ function Room() {
   });
 
   return (
-    /* <>
-      <mesh scale={[scaleMax, scaleMax, scaleMax]}>
-        <boxGeometry args={[...roomSize]} />
-        <meshPhysicalMaterial wireframe={true} {...roomMaterialProps} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh scale={[scaleMax, scaleMax, scaleMax]} position={[0, 0, thickness * 0.5 * scaleMax]}>
-        <boxGeometry args={[roomSize[0] - thickness, roomSize[1] - thickness, roomSize[2]]} />
-        <meshPhysicalMaterial wireframe={true} />
-      </mesh>
-      <mesh scale={[scaleMax, scaleMax, scaleMax]} position={[0, 0, -(roomSize[2] * scaleMax * 0.5)]}>
-        <boxGeometry args={[0.4, 0.4, thickness]} />
-        <meshPhysicalMaterial wireframe={true} />
-      </mesh>
-    </> */
     <mesh ref={room} position={[0, 0, -0.5]} castShadow receiveShadow>
       <Subtraction>
         <Subtraction a>
@@ -199,7 +185,7 @@ function Room() {
           </Brush>
         </Subtraction>
         <Brush b scale={[scaleMin, scaleMin, scaleMin]} position={[0, 0, -(roomSize[2] * scaleMax * 0.5)]}>
-          <boxGeometry args={[0.8, 0.8, thickness * 4]} />
+          <boxGeometry args={[windowSize, windowSize, thickness * 4]} />
         </Brush>
       </Subtraction>
       <meshPhysicalMaterial {...roomMaterialProps} side={THREE.DoubleSide} />
@@ -316,7 +302,6 @@ function Sun() {
 
   useFrame(() => {
     ref.current.position.x = THREE.MathUtils.mapLinear(mix.current, 0, 100, 15, -15);
-
     ref.current.rotation.y = THREE.MathUtils.mapLinear(mix.current, 0, 100, 0, -Math.PI * 0.55);
 
     let lerpedSunColor = new THREE.Color(sunColor).lerp(new THREE.Color(targetSunColor), mix.current / 100);
