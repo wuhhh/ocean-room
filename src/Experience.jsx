@@ -428,7 +428,7 @@ export default function Experience() {
       />
       <Lights />
       <Room />
-      <Chair scale={0.4} position={[-2, -3.1, -1.3]} rotation-y={Math.PI * 2.2} />
+      <Chair scale={0.35} position={[-2, -3.1, -1.3]} rotation-y={Math.PI * 2.2} />
       <Ocean />
       <Sky />
       <Sun />

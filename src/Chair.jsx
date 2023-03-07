@@ -9,7 +9,7 @@ import { MeshPhysicalMaterial } from "three";
 export function Chair(props) {
   const { nodes } = useGLTF("/d4-model-webgl-transformed.glb");
   const chairMaterial = new MeshPhysicalMaterial({
-    color: "DarkGrey",
+    color: "#dcdcdc",
     roughness: 1.0,
     metalness: 0.22,
     reflectivity: 0.4,
