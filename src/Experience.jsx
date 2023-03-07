@@ -1,10 +1,11 @@
 import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { OrbitControls, shaderMaterial } from "@react-three/drei";
+import { OrbitControls, shaderMaterial, softShadows } from "@react-three/drei";
 import { Brush, Subtraction } from "@react-three/csg";
 import { Leva, useControls } from "leva";
 import { useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
+import { Chair } from "./Chair";
 import create from "zustand";
 
 /**
@@ -98,8 +99,8 @@ function Lights() {
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
-        shadow-mapSize-width={4096}
-        shadow-mapSize-height={4096}
+        shadow-mapSize-width={4096 * 4}
+        shadow-mapSize-height={4096 * 4}
         shadow-normalBias={0.01}
         color={props.lightColor}
         position={[props.lightPosition.x, props.lightPosition.y, props.lightPosition.z]}
@@ -427,6 +428,7 @@ export default function Experience() {
       />
       <Lights />
       <Room />
+      <Chair scale={0.4} position={[-2, -3.1, -1.3]} rotation-y={Math.PI * 2.2} />
       <Ocean />
       <Sky />
       <Sun />
