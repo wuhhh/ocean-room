@@ -19,17 +19,17 @@ svg {
 .mix {
 	position: absolute;
 	left: 50%;
-	bottom: -8px;
+	top: -8px;
 	height: 48px;
 	width: 80vw;
 	background-color: #1c1c1c;
-	border-radius: 20px 20px 0 0;
+	border-radius: 0 0 20px 20px;
 	transform: translateX(-50%);
 
 	display: flex;
 	align-items:center;
 	justify-content:space-between;
-	padding:0 21px 6px 16px;
+	padding:6px 21px 0 16px;
 }
 
 @media screen and (min-width: 640px) {
