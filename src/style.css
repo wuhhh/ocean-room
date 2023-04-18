@@ -2,27 +2,47 @@ html,
 body,
 #root
 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #c0d0c7;
-		margin: 0;
-		padding: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #c0d0c7;
+	margin: 0;
+	padding: 0;
 }
 
 svg {
 	display: block;
 }
 
+.logomark {
+	position: absolute; 
+	top: 18px;
+	left: 18px;
+	width: auto;
+	height: 26px;
+}
+
+.logomark:hover {
+	opacity: 1;
+}
+
+@media screen and (min-width: 640px) {
+	.logomark {
+		top: initial;
+		bottom: 28px;
+		left: 34px;
+	}
+}
+
 .mix {
 	position: absolute;
 	left: 50%;
-	bottom: -8px;
+	bottom: 10px;
 	height: 48px;
 	width: 80vw;
-	background-color: #1c1c1c;
+	max-width: 350px;
 	border-radius: 20px 20px 0 0;
 	transform: translateX(-50%);
 
@@ -35,6 +55,7 @@ svg {
 @media screen and (min-width: 640px) {
 	.mix {
 		width: 398px;
+		max-width: none;
 	}
 }
 
@@ -48,12 +69,10 @@ svg {
 	height: 13px;
 	border-radius: 9999px;
 	background-color: rgb(255, 206, 113);
-	/* box-shadow: 0 0 5px 2px rgb(255, 206, 113, 0.5); */
 }
 
 .mix--icon-moon {
 	color: white;
-	/* filter: drop-shadow(0 0 5px rgba(255,255,255, 1.0)); */
 }
 
 .mix:hover {
@@ -71,12 +90,12 @@ svg {
 }
 
 .mix--range::-webkit-slider-runnable-track {
-  background: #434343;
+  background: black;
   height: 2px;
 }
 
 .mix--range::-moz-range-track {
-  background: #434343;
+  background: black;
   height: 2px;
 }
 
@@ -84,9 +103,8 @@ svg {
 	-webkit-appearance: none;
 	width: 10px;
 	height: 10px;
-	background-color: #D4D4D4;
+	background-color: white;
 	border-radius: 1px;
-	/*  w: 0 0 16px 3px rgba(255, 255, 255, 0.2); */
 	margin-top: -4px;
 	transform: rotate(45deg);
 }
@@ -95,9 +113,8 @@ svg {
 	border: none;
 	width: 10px;
 	height: 10px;
-	background-color: #D4D4D4;
+	background-color: white;
 	border-radius: 1px;
-	/* box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.2); */
 	transform: rotate(45deg);
 }
 

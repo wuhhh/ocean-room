@@ -5,9 +5,11 @@ import { Canvas } from "@react-three/fiber";
 import Experience from "./Experience.jsx";
 // import { Perf } from "r3f-perf";
 
+import LogoMark from './components/LogoMark';
+
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
-root.render(
+root.render(<>
   <Canvas
     shadows={{
       enabled: true,
@@ -31,4 +33,7 @@ root.render(
     {/* <Perf position="top-left" minimal /> */}
     <Experience />
   </Canvas>
+	<LogoMark className="logomark" />
+</>
+	
 );
