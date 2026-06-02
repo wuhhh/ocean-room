@@ -204,7 +204,7 @@ function Ocean() {
 
   const ref = useRef();
   const gl = useThree(state => state.gl);
-  const waterNormals = useLoader(THREE.TextureLoader, "/waternormals.jpeg");
+  const waterNormals = useLoader(THREE.TextureLoader, "/ocean-room/textures/waternormals.jpeg");
 
   waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 
